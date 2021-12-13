@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.12)
+project(SimpleSolve)
+set(CMAKE_CXX_STANDARD 20)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+add_compile_options(-Wall -Wextra -pedantic -Wmissing-include-dirs -Wformat=2 -Wunused -Wcast-align)
+
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(SimpleSolve src/ESolve.cpp)  #this allows cmake to build the .so or .a file
+target_include_directories(SimpleSolve PUBLIC include)
+target_link_libraries(SimpleSolve PUBLIC Eigen3::Eigen)
+add_executable(basic_tests src/main.cpp src/test.cpp src/ESolve.cpp include/iteration.h include/ESolve.h)
+target_link_libraries(basic_tests SimpleSolve)
+target_include_directories(basic_tests PRIVATE include)
+#install(TARGETS SimpleSolve DESTINATION /usr/lib)
+install(FILES include/iteration.h DESTINATION include)
+add_test(NAME basic_tests COMMAND basic_tests WORKING_DIRECTORY src)
